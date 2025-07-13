@@ -5,6 +5,30 @@
 #include "fileio.h"
 #include "utils.h"
 
+// For first-run: create initial admin
+void initial_admin_setup() {
+    User *users = NULL;
+    int count = load_users(&users);
+    if (count == 0) {
+        printf("\n=== Initial Admin Setup ===\n");
+        printf("Create Admin Account\n");
+        char uname[USERNAME_LEN], pass[PASS_LEN];
+
+        strncpy(uname, INIT_ADMIN_USERNAME, USERNAME_LEN);
+        strncpy(pass, INIT_ADMIN_PASSWORD, PASS_LEN);
+
+        users = realloc(users, sizeof(User));
+        strcpy(users[0].username, uname);
+        strcpy(users[0].password, pass);
+        users[0].role = ROLE_ADMIN;
+
+        save_users(users, 1);
+        free(users);
+
+        printf("✅ Admin account initialized.\n\n");
+    }
+}
+
 void admin_menu(const User *current) {
     printf("Welcome Admin %s\n", current->username);
     while (1) {

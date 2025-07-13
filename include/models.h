@@ -4,6 +4,8 @@
 #define USERNAME_LEN 32
 #define PASS_LEN 32
 #define MANIFESTO_LEN 512
+#define INIT_ADMIN_USERNAME "SCDS"
+#define INIT_ADMIN_PASSWORD "202504"
 
 typedef enum {
     ROLE_ADMIN = 0,

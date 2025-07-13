@@ -5,8 +5,17 @@
 #include "fileio.h"
 #include "utils.h"
 
+void Representative_actions();
+void Representative_actions(){
+    printf("As a students' representative you can: \n");
+    printf(" • Register/log in to the system.\n");
+    printf(" • Submit/update their election manifesto.\n");
+}
+
 void rep_menu(const User *current) {
     printf("👤 Representative: %s\n", current->username);
+
+    Representative_actions();
 
     while (1) {
         int opt = rep_prompt();  // 0 Logout, 1 Submit/Update manifesto
