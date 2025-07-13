@@ -88,12 +88,42 @@ void password_guideline(){
     printf("• Use symbols for extra security.\n\n");
 }
 //! Username
-bool valid_username(const char *s) {
+/* bool valid_username(const char *s) {
     int len = strlen(s);
-    if (len < 3 || len > USERNAME_LEN-1) return false;
-    for (int i = 0; s[i]; i++)
-        if (!(isalnum((unsigned char)s[i]) || s[i]=='_'))
-            return false;
+    if (len < 3 || len >= USERNAME_LEN) return false;
+    if (!isalpha((unsigned char)s[0])) return false;
+    for (int i = 1; s[i]; i++) {
+        unsigned char c = (unsigned char)s[i];
+        if (!isalnum(c) && c != '_') return false;
+    }
+    return true;
+} */
+/* bool valid_username(const char *s) {
+    int len = strlen(s);
+    if (len < 3 || len >= USERNAME_LEN) return false;
+
+    unsigned char c0 = (unsigned char)s[0];
+    if (!isalpha(c0)) return false;
+
+    for (int i = 1; s[i]; i++) {
+        unsigned char c = (unsigned char)s[i];
+        if (!isalnum(c) && c != '_') return false;
+    }
+
+    return true;
+} */
+bool valid_username(const char *s) {
+    size_t len = strlen(s);
+    if (len < 3 || len >= USERNAME_LEN) return false;
+
+    unsigned char c0 = (unsigned char)s[0];
+    if (!isalpha(c0)) return false;
+
+    for (size_t i = 1; s[i]; i++) {
+        unsigned char c = (unsigned char)s[i];
+        if (!isalnum(c) && c != '_') return false;
+    }
+
     return true;
 }
 void username_guideline(){
