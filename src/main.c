@@ -32,11 +32,23 @@ int main(void) {
 
         char uname[USERNAME_LEN], pass[PASS_LEN];
         
-        //* Loging Flow 
+        //* Logging Flow 
         User current;
         if (opt == 2){
+            bool taken = true;
             printf("\nEnter The:\n");
-            get_string("Username", uname, USERNAME_LEN);
+            while (taken){
+                get_string("Username", uname, USERNAME_LEN);
+                //! allowed chars ??
+                if (!valid_username(uname)){
+                    printf("\n❌ Invalid username!\n");
+                    username_guideline();
+                    continue;
+                }
+                else
+                    taken = false;
+            }
+            printf("\nEnter The:\n");
             get_string("Password", pass, PASS_LEN);
         
             if (authenticate(uname, pass, &current)) {
@@ -70,13 +82,16 @@ int main(void) {
             printf("\nEnter The:\n");
             while (taken){
                 get_string("Username", uname, USERNAME_LEN);
+                //! Already taken
                 if (username_exists(users, cnt, uname)){
                     printf("❌ Username already exists!\n");
-                    //! allowed chars ??
-                    if (!valid_username(uname)){
-                        username_guideline();
-                        continue;
-                    }
+                    continue;
+                }
+                //! allowed chars ??
+                if (!valid_username(uname)){
+                    printf("\n❌ Invalid username!\n");
+                    username_guideline();
+                    continue;
                 }
                 else
                     taken = false;
@@ -90,6 +105,7 @@ int main(void) {
                 if (!is_strong_password(pass)){
                     printf("\n❌ Weak password.\n");
                     password_guideline();
+                    continue;
                 }
                 else
                     strong = true;

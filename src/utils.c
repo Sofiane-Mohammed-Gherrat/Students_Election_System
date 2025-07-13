@@ -5,6 +5,9 @@
 #include <ctype.h>
 #include "fileio.h"
 #include <stdlib.h>
+#include <locale.h>
+
+//setlocale(LC_CTYPE, "");
 
 int get_int(int min, int max);  // Private helper
 
@@ -88,47 +91,33 @@ void password_guideline(){
     printf("• Use symbols for extra security.\n\n");
 }
 //! Username
-/* bool valid_username(const char *s) {
-    int len = strlen(s);
-    if (len < 3 || len >= USERNAME_LEN) return false;
-    if (!isalpha((unsigned char)s[0])) return false;
-    for (int i = 1; s[i]; i++) {
-        unsigned char c = (unsigned char)s[i];
-        if (!isalnum(c) && c != '_') return false;
-    }
-    return true;
-} */
-/* bool valid_username(const char *s) {
-    int len = strlen(s);
-    if (len < 3 || len >= USERNAME_LEN) return false;
-
-    unsigned char c0 = (unsigned char)s[0];
-    if (!isalpha(c0)) return false;
-
-    for (int i = 1; s[i]; i++) {
-        unsigned char c = (unsigned char)s[i];
-        if (!isalnum(c) && c != '_') return false;
-    }
-
-    return true;
-} */
 bool valid_username(const char *s) {
-    size_t len = strlen(s);
-    if (len < 3 || len >= USERNAME_LEN) return false;
+    int len = strlen(s);
+    if (len < 3 || len >= USERNAME_LEN) {
+        printf("Debug: Invalid length %d\n", len);
+        return false;
+    }
 
-    unsigned char c0 = (unsigned char)s[0];
-    if (!isalpha(c0)) return false;
+    unsigned char first_char = (unsigned char)s[0];
+    if (!isalpha(first_char)) {
+        printf("Debug: First character '%c' is not alphabetic\n", s[0]);
+        return false;
+    }
 
-    for (size_t i = 1; s[i]; i++) {
+    for (int i = 1; s[i]; i++) {
         unsigned char c = (unsigned char)s[i];
-        if (!isalnum(c) && c != '_') return false;
+        if (!isalnum(c) && c != '_') {
+            printf("Debug: Invalid character '%c' at position %d\n", s[i], i);
+            return false;
+        }
     }
 
     return true;
 }
+
 void username_guideline(){
     printf("The user name should:\n");
     printf("• Be 3–20 characters long.\n");
     printf("• Begins with a letter (A–Z or a–z).\n");
-    printf("• Contains only letters, digits, underscores (_), or hyphens (-).\n");
+    printf("• Contains only letters, digits, underscores (_), or hyphens (-).\n\n");
 }
