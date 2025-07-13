@@ -1,3 +1,4 @@
+// student.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,17 +6,16 @@
 #include "fileio.h"
 #include "utils.h"
 
-void students_actions(); 
-void students_actions(){
-    printf("As a student, you could: \n");
-    printf(" • Register and log in to the system.\n");
-    printf(" • Vew the list of student representatives along with their manifestos.\n");
-    printf(" • Cast a vote for 1 representative (1 vote per student).\n");
-    printf(" • View the final election results once they are published by the School Admin.\n");
+void students_actions() {
+    printf("As a student, you can:\n");
+    printf(" • Register and log in to the system\n");
+    printf(" • View the list of student representatives with their manifestos\n");
+    printf(" • Cast one vote for a representative\n");
+    printf(" • View election results (when published by admin)\n");
 }
+
 void student_menu(const User *current) {
     printf("👥 Student: %s\n", current->username);
-
     students_actions();
 
     while (1) {
@@ -30,9 +30,12 @@ void student_menu(const User *current) {
             for (int i = 0; i < mfCount; i++) {
                 printf(" - %s: %s\n", mfs[i].rep_username, mfs[i].manifesto);
             }
-        } else if (opt == 2) {
+        } 
+        else if (opt == 2) {
             Vote *votes = NULL;
             int voteCount = load_votes(&votes);
+            
+            // Check if already voted
             for (int i = 0; i < voteCount; i++) {
                 if (strcmp(votes[i].student_username, current->username) == 0) {
                     printf("❌ You've already voted!\n");
@@ -42,9 +45,24 @@ void student_menu(const User *current) {
             }
             free(votes);
 
+            // Get vote choice
             char choice[USERNAME_LEN];
             get_string("Enter rep username to vote for", choice, USERNAME_LEN);
 
+            // Validate candidate
+            int valid = 0;
+            for (int i = 0; i < mfCount; i++) {
+                if (strcmp(mfs[i].rep_username, choice) == 0) {
+                    valid = 1;
+                    break;
+                }
+            }
+            if (!valid) {
+                printf("❌ Invalid candidate! Please try again.\n");
+                goto student_continue;
+            }
+
+            // Record vote
             Vote newVote;
             strcpy(newVote.student_username, current->username);
             strcpy(newVote.rep_username, choice);
@@ -56,8 +74,8 @@ void student_menu(const User *current) {
             save_votes(votes, voteCount);
             free(votes);
             printf("✅ Vote cast for %s!\n", choice);
-
-        } else if (opt == 3) {
+        } 
+        else if (opt == 3) {
             Manifesto *resMfs = NULL;
             int *counts = NULL;
             int resCount = load_results(&resMfs, &counts);
