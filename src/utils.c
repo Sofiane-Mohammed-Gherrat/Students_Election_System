@@ -30,7 +30,7 @@ void get_string(const char *prompt, char *buf, int maxlen) {
 }
 
 int main_prompt() {
-    printf("Choose below:");
+    printf("Please choose below:");
     printf("\n 1. Register\n 2. Login\n 0. Exit\nSelect: ");
     return get_int(0, 2);
 }

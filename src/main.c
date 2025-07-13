@@ -16,8 +16,9 @@
 
 void Welcoming_message(){
     printf("=================================================\n");
-    printf("🔎 Welcome to the student election system\n");
-    printf("🔎 This system allows you to:\n    • Login as the admin.\n    • Register/login as a student.\n    • Register/login as representative.\n\n");
+    printf("     Welcome To The Student Election System!\n");
+    printf("=================================================\n");
+    printf("This system allows you to:\n\n    • Login as the admin.\n    • Register/login as a student.\n    • Register/login as representative.\n\n");
 }
 
 
@@ -114,6 +115,6 @@ int main(void) {
             2) Student
             Select (1–2): */
     }
-    printf("\n🛑 Exiting, goodbye!\n");
+    printf("\nExiting, goodbye!\n");
     return 0;
 }

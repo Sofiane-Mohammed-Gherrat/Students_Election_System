@@ -3,7 +3,6 @@
 
 #include "models.h"
 
-// Launch the menu for student representatives
 void Representative_actions();
 void rep_menu(const User *current);
 
