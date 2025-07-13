@@ -5,8 +5,18 @@
 #include "fileio.h"
 #include "utils.h"
 
+void students_actions(); 
+void students_actions(){
+    printf("As a student, you could: \n");
+    printf(" • Register and log in to the system.\n");
+    printf(" • Vew the list of student representatives along with their manifestos.\n");
+    printf(" • Cast a vote for 1 representative (1 vote per student).\n");
+    printf(" • View the final election results once they are published by the School Admin.\n");
+}
 void student_menu(const User *current) {
     printf("👥 Student: %s\n", current->username);
+
+    students_actions();
 
     while (1) {
         int opt = student_prompt();  // 0 Logout, 1 View reps, 2 Vote, 3 View results
