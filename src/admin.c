@@ -5,6 +5,9 @@
 #include "fileio.h"
 #include "utils.h"
 
+//TODO: publishing a result is creating a results.txt file that have the votes 
+//TODO: add a function to delete results.txt file
+
 // For first-run: create initial admin
 void initial_admin_setup() {
     User *users = NULL;

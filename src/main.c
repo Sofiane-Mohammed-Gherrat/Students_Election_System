@@ -45,12 +45,16 @@ int main(void) {
                     username_guideline();
                     continue;
                 }
-                else
+                else{
+                    printf("\n++ Username accepted\n");
                     taken = false;
+                }
             }
             printf("\nEnter The:\n");
             get_string("Password", pass, PASS_LEN);
-        
+            printf("\n++ Password accepted\n");
+
+            //! Authenticate user
             if (authenticate(uname, pass, &current)) {
                 if (current.role == ROLE_ADMIN) {
                     printf("🔐 Admin login successful.\n");
