@@ -16,8 +16,9 @@
 
 void Welcoming_message(){
     printf("=================================================\n");
-    printf("🔎 Welcome to the student election system\n");
-    printf("🔎 This system allows you to:\n    • Login as the admin.\n    • Register/login as a student.\n    • Register/login as representative.\n\n");
+    printf("     Welcome To The Student Election System!\n");
+    printf("=================================================\n");
+    printf("This system allows you to:\n\n    • Login as the admin.\n    • Register/login as a student.\n    • Register/login as representative.\n\n");
 }
 
 
@@ -32,32 +33,16 @@ int main(void) {
 
         char uname[USERNAME_LEN], pass[PASS_LEN];
         
-        //* Logging Flow 
+        //* Loging Flow 
         User current;
         if (opt == 2){
-            bool taken = true;
             printf("\nEnter The:\n");
-            while (taken){
-                get_string("Username", uname, USERNAME_LEN);
-                //! allowed chars ??
-                if (!valid_username(uname)){
-                    printf("\n❌ Invalid username!\n");
-                    username_guideline();
-                    continue;
-                }
-                else{
-                    printf("\n++ Username accepted\n");
-                    taken = false;
-                }
-            }
-            printf("\nEnter The:\n");
+            get_string("Username", uname, USERNAME_LEN);
             get_string("Password", pass, PASS_LEN);
-            printf("\n++ Password accepted\n");
-
-            //! Authenticate user
+        
             if (authenticate(uname, pass, &current)) {
                 if (current.role == ROLE_ADMIN) {
-                    printf("🔐 Admin login successful.\n");
+                    printf("Admin login successful.\n");
                     admin_menu(&current);
                 } else if (current.role == ROLE_REP) {
                     rep_menu(&current);
@@ -66,7 +51,7 @@ int main(void) {
                 }
             }
             else{
-                printf("\n❌ Wrong credentials\nRetry\n\n");
+                printf("\nWrong credentials\nRetry\n\n");
             }
         }
         //* Registration
@@ -86,35 +71,31 @@ int main(void) {
             printf("\nEnter The:\n");
             while (taken){
                 get_string("Username", uname, USERNAME_LEN);
-                //! Already taken
                 if (username_exists(users, cnt, uname)){
-                    printf("❌ Username already exists!\n");
-                    continue;
-                }
-                //! allowed chars ??
-                if (!valid_username(uname)){
-                    printf("\n❌ Invalid username!\n");
-                    username_guideline();
-                    continue;
+                    printf("Username already exists!\n");
+                    //! allowed chars ??
+                    if (!valid_username(uname)){
+                        username_guideline();
+                        continue;
+                    }
                 }
                 else
                     taken = false;
             }
-            printf("\n✅ Username accepted\n");
+            printf("\nUsername accepted\n");
             //! strong enough pw in a loop 
             bool strong = false;
             printf("\nEnter The:\n");
             while (!strong){
                 get_string("Password", pass, PASS_LEN);
                 if (!is_strong_password(pass)){
-                    printf("\n❌ Weak password.\n");
+                    printf("\nWeak password.\n");
                     password_guideline();
-                    continue;
                 }
                 else
                     strong = true;
             }
-            printf("\n✅ Password accepted\n");
+            printf("\nPassword accepted\n");
             
             users = realloc(users, (cnt + 1) * sizeof *users);
             strcpy(users[cnt].username, uname);
@@ -124,7 +105,7 @@ int main(void) {
             save_users(users, cnt + 1);
             free(users);
 
-            printf("\n✅ Registration complete! You are now a %s.\n\n",
+            printf("\nRegistration complete! You are now a %s.\n\n",
                 role_choice == 1 ? "STUDENT REPRESENTATIVE" : "STUDENT");
         }
 
@@ -134,6 +115,6 @@ int main(void) {
             2) Student
             Select (1–2): */
     }
-    printf("\n🛑 Exiting, goodbye!\n");
+    printf("\nExiting, goodbye!\n");
     return 0;
 }

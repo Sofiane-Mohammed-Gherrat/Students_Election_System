@@ -15,8 +15,10 @@ void students_actions() {
 }
 
 void Disaply_manifestos(const Manifesto *mfs, int mfCount) {
-    printf("=================================================\n");
-    printf("📄 Candidate Manifestos:\n\n");
+    printf("============================================\n");
+    printf("           Candidate Manifestos:\n");
+    printf("============================================\n\n");
+
     for (int i = 0; i < mfCount; i++) {
         printf("• %s:\n%s\n\n", mfs[i].rep_username, mfs[i].manifesto);
     }
@@ -24,20 +26,20 @@ void Disaply_manifestos(const Manifesto *mfs, int mfCount) {
 int check_already_voted(const Vote *votes, int voteCount, const char *username) {
     for (int i = 0; i < voteCount; i++) {
         if (strcmp(votes[i].student_username, username) == 0) {
-            printf("❌ You've already voted!\n");
+            printf("You've already voted!\n");
             return 1; // Already voted
         }
     }
-    printf("✅ You have not voted yet.\n");
+    printf("You have not voted yet.\n");
     return 0; // Not voted yet
 }
 int validate_candidate(const User *current, const Manifesto *mfs, int mfCount) {
     if (current->role != ROLE_STUDENT) {
-        printf("❌ Only students can vote!\n");
+        printf("Only students can vote!\n");
         return 0; // Not a student
     }
     if (mfCount == 0) {
-        printf("❌ No candidates available to vote for.\n");
+        printf("No candidates available to vote for.\n");
         return 0; // No candidates
     }
     return 1; // Valid candidate
@@ -54,11 +56,11 @@ void record_new_vote(const User *current, const char *choice) {
     votes[voteCount++] = newVote;
     save_votes(votes, voteCount);
     free(votes);
-    printf("✅ Vote cast for %s!\n", choice);
+    printf("Vote cast for %s!\n", choice);
 }
 
 void results_summary(const Manifesto *resMfs, const int *counts, int resCount) {
-    printf("📊 Final Election Results:\n");
+    printf("Final Election Results:\n");
     for (int i = 0; i < resCount; i++) {
         printf(" - %s : %d votes\n", resMfs[i].rep_username, counts[i]);
     }
@@ -67,8 +69,9 @@ void results_summary(const Manifesto *resMfs, const int *counts, int resCount) {
 
 void student_menu(const User *current) {
     printf("=================================================\n");
-    printf("🔑 Welcome\n");
-    printf("👥 Student: %s\n", current->username);
+    printf("Welcome Student!!!\n");
+    printf("=================================================\n");
+    printf("Student: %s\n", current->username);
     students_actions();
 
     while (1) {
@@ -85,10 +88,10 @@ void student_menu(const User *current) {
             // Display manifestos
             Disaply_manifestos(mfs, mfCount);
             if (mfCount == 0) {
-                printf("❌ No manifestos available. Please check back later.\n");
+                printf("No manifestos available. Please check back later.\n");
                 continue; // No manifestos, prompt again
             }
-            printf("📄 Manifestos loaded successfully.\n");
+            printf("Manifestos loaded successfully.\n");
         } 
         else if (opt == 2) {
             Vote *votes = NULL;
@@ -103,9 +106,18 @@ void student_menu(const User *current) {
 
             //! Get vote choice
             char choice[USERNAME_LEN];
-            printf("=================================================\n");
-            get_string("\nEnter rep username to vote for", choice, USERNAME_LEN);
-            choice[strcspn(choice, "\r\n")] = '\0'; // Remove trailing newline
+            while (1) {
+                printf("=================================================\n");
+                get_string("\nEnter rep username to vote for", choice, USERNAME_LEN);
+                choice[strcspn(choice, "\r\n")] = '\0'; // Remove trailing newline
+
+                //! Check validity against file
+                if (isValidCandidate(choice)) {
+                    break;
+                } else {
+                    printf("'%s' is not a valid candidate. Please try again.\n", choice);
+                }
+            }
 
             //! Validate candidate
             if (!validate_candidate(current, mfs, mfCount)) {
@@ -115,13 +127,14 @@ void student_menu(const User *current) {
 
             //! Record vote
             record_new_vote(current, choice);
+
         } 
         else if (opt == 3) {
             Manifesto *resMfs = NULL;
             int *counts = NULL;
             int resCount = load_results(&resMfs, &counts);
             if (resCount == 0) {
-                printf("⏳ Results not published yet.\n");
+                printf("Results not published yet.\n");
             } else {
                 results_summary(resMfs, counts, resCount);
             }
@@ -129,7 +142,7 @@ void student_menu(const User *current) {
             free(counts);
         }
         else {
-            printf("❌ Invalid option! Please try again.\n");
+            printf("Invalid option! Please try again.\n");
             free(mfs);
             continue; // Invalid option, prompt again
         }

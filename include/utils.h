@@ -23,5 +23,6 @@ bool valid_username(const char *s);
 void username_guideline();
 // Gets a non-empty string from user
 void get_string(const char *prompt, char *buf, int maxlen);
+int isValidCandidate(const char *name);
 
 #endif // UTILS_H

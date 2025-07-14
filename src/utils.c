@@ -121,3 +121,25 @@ void username_guideline(){
     printf("• Begins with a letter (A–Z or a–z).\n");
     printf("• Contains only letters, digits, underscores (_), or hyphens (-).\n\n");
 }
+
+int isValidCandidate(const char *name) {
+    FILE *fp = fopen("manifestos.txt", "r");
+    if (!fp) {
+        printf("Failed to open manifestos.txt\n");
+        return 0;
+    }
+
+    char line[512];
+    while (fgets(line, sizeof(line), fp)) {
+        line[strcspn(line, "\n")] = '\0';
+
+        char *token = strtok(line, "|");
+        if (token && strcmp(line, name) == 0) {
+            fclose(fp);
+            return 1;  
+        }
+    }
+
+    fclose(fp);
+    return 0; 
+}
