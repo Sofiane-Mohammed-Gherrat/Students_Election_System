@@ -7,4 +7,4 @@
 void students_actions();
 void student_menu(const User *current);
 
-#endif // STUDENT_H
+#endif

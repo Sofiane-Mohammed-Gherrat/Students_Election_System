@@ -24,4 +24,9 @@ void username_guideline();
 // Gets a non-empty string from user
 void get_string(const char *prompt, char *buf, int maxlen);
 
-#endif // UTILS_H
+void logging_out();
+
+// string formatting
+char *format_string(char *str);
+
+#endif

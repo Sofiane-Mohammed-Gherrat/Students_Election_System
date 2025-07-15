@@ -7,4 +7,4 @@
 void Representative_actions();
 void rep_menu(const User *current);
 
-#endif // REP_H
+#endif

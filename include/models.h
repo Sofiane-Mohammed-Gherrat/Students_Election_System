@@ -7,6 +7,12 @@
 #define INIT_ADMIN_USERNAME "SCDS"
 #define INIT_ADMIN_PASSWORD "202504"
 
+#define Manifesto_Path "manifestos.txt"
+#define Users_Path "users.txt"
+#define Votes_Path "votes.txt"
+#define Results_Path "results.txt"
+#define Vote_Updates_Path "votes_updates.txt"
+
 typedef enum {
     ROLE_ADMIN = 0,
     ROLE_REP,
@@ -32,4 +38,4 @@ typedef struct {
     char rep_username[USERNAME_LEN];
 } Vote;
 
-#endif // MODELS_H
+#endif
