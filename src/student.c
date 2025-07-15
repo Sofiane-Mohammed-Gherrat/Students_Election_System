@@ -93,7 +93,7 @@ void student_menu(const User *current) {
             Display_manifestos(mfs, mfCount);
             if (mfCount == 0) {
                 printf("[WARNING] No manifestos available. Please check back later.\n");
-                continue; // No manifestos, prompt again
+                continue;
             }
             printf("[SUCCESS] Manifestos loaded successfully.\n");
         } 
@@ -131,7 +131,8 @@ void student_menu(const User *current) {
             int voteCount = load_votes(&votes);
 
 
-            // Compute longest username width
+            //! Compute longest username width
+            //? This is to ensure proper alignment in the output
             int maxNameLen = 0;
             for (int i = 0; i < resCount; i++) {
                 int len = strlen(resMfs[i].rep_username);

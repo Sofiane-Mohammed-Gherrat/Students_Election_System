@@ -51,7 +51,7 @@ void rep_menu(const User *current) {
         get_string("Enter your manifesto (or press enter to keep current):\n> ", buffer, MANIFESTO_LEN);
 
         if (buffer[0] == '\0' && idx >= 0) {
-                printf("\n[Att] No changes made to the manifesto.\n");
+                printf("\n[WARNING] No changes made to the manifesto.\n");
                 continue; // No changes, prompt again
         }
         else if (idx >= 0 && buffer[0] != '\0') {

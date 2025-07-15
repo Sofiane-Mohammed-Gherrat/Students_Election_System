@@ -7,8 +7,6 @@
 #include <stdlib.h>
 #include <locale.h>
 
-//TODO: Create a function that will check if all reps have manifestos, those not having; the function displays Not yet submitted in the manifesto section
-
 int get_int(int min, int max);  // Private helper
 
 int authenticate(const char *username, const char *password, User *outUser) {
@@ -25,16 +23,7 @@ int authenticate(const char *username, const char *password, User *outUser) {
     free(users);
     return 0;
 }
-/* void get_string(const char *prompt, char *buf, int maxlen) {
-    do {
-        printf("%s: ", prompt);
-        fgets(buf, maxlen, stdin);
-        buf[strcspn(buf, "\n")] = '\0';
-        if (strlen(buf) >= maxlen - 1) {
-            printf("The string is too long! Please limit to %d characters.\n", maxlen - 1);
-        }
-    } while (strlen(buf) >= maxlen - 1);
-} */
+
 //! improved get_string function
 //* This function reads a string from standard input with a maximum length and handles buffer overflow.
 //* It removes the trailing newline character if present.
@@ -61,7 +50,6 @@ void get_string(const char *prompt, char *buf, int maxlen) {
         return;
     }
 }
-
 
 int main_prompt() {
     printf("Choose below:");

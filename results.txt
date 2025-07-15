@@ -1,10 +1,8 @@
-sofiane 2
-sofine_gherrat 1
-anna_kim 1
+sofiane 0
+sofine_gherrat 0
 mark23 1
-maria_gomez 0
-eli_chen 0
+max_gomez 0
+elior_chen 0
 pablo_ortega 1
-pabla_turga 0
 mahdi_x 1
 Yacinooooo 0
