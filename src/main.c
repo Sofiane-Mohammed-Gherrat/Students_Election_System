@@ -30,17 +30,33 @@ int main(void)
     ensure_file_exists(Vote_Updates_Path);
 
     //* for initializin the admin account
-    initial_admin_setup();
+        initial_admin_setup();
+    //* check if the default admin is at the top of the users file
+        if (check_default_admin_at_top() == 0) {
+            printf("\n[ERROR] Default admin is not at the top of the users file.\n");
+            enforce_default_admin_top();
+            printf("[SUCCESS] Default admin is now at the top of the users file.\n");
+        }
+    //* clean other admins except the default one
+        verify_and_clean_admins();
     //* sync_manifestos_with_reps()
-    sync_manifestos_with_reps(); //! in case the representatives was entered manually
+        sync_manifestos_with_reps(); //! in case the representatives was entered manually
     //* Welcome message
-    Welcoming_message();
+        Welcoming_message();
     printf("=================================================\n");
+
+    //* Main loop
     while (1)
     {
         int opt = main_prompt();
         if (opt == 0)
             break;
+
+        /** @note: Check if the default admin is at the top of the users file ( avoiding corrupted data ) **/
+        if (check_default_admin_at_top() == 0) {
+            printf("[ERROR] Default admin is not at the top of the users file.\n");
+            break;
+        }
 
         char uname[USERNAME_LEN], pass[PASS_LEN];
 
@@ -71,6 +87,7 @@ int main(void)
             printf("\n[SUCCESS] Password accepted\n\n");
 
             //! Authenticate user
+            verify_and_clean_admins(); // Ensure admin is at the top and no duplicates
             if (authenticate(uname, pass, &current))
             {
                 if (current.role == ROLE_ADMIN)
@@ -95,7 +112,6 @@ int main(void)
         //* Registration
         else if (opt == 1)
         {
-
             // 1. Choose role
             printf("\nChoose to register as:\n 1. Student Representative\n 2. Student\nSelect (1–2): ");
             int role_choice = get_int(1, 2);

@@ -12,9 +12,9 @@ void Representative_actions(){
 }
 
 void rep_menu(const User *current) {
-    printf("\n===========================================");
+    printf("\n=================================================");
     printf("\n      [Welcome] Representative: %s\n", current->username);
-    printf("===========================================\n");
+    printf("=================================================\n");
     printf("[SUCCESS] Representative menu loaded successfully.\n");
     
     //* what you can do

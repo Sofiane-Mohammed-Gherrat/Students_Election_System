@@ -5,7 +5,17 @@
 #include "models.h"
 
 
-//! Creates files if they don't exist
+/**
+ * ? Ensure that a file exists by creating it if needed.
+ *
+ * Opens `fname` for reading; if it does not exist, creates an empty file.
+ * On failure to create, prints to stderr and exits with failure status.
+ *
+ * @param fname  Path to the file to check or create.
+ *
+ * @note Used to initialize storage before reading or writing user, vote,
+ * manifesto, or results data.
+ */
 void ensure_file_exists(const char *fname) {
     FILE *f = fopen(fname, "r");
     if (!f) {
@@ -19,7 +29,17 @@ void ensure_file_exists(const char *fname) {
     fclose(f);
 }
 
-// Load users
+/**
+ * ? Load all users from disk into memory.
+ *
+ * Reads lines from `Users_Path`, parsing username, password, and role.
+ * Dynamically reallocates as needed.
+ *
+ * @param[out] out  Destination pointer for the allocated User array.
+ * @return           Number of users loaded (may be zero).
+ *
+ * @note Caller should free `*out` when done.
+ */
 int load_users(User **out) {
     FILE *f = fopen(Users_Path, "r");
     if (!f) { *out = NULL; return 0; }
@@ -34,7 +54,17 @@ int load_users(User **out) {
     fclose(f); *out = arr; return cnt;
 }
 
-// Load representatives
+/**
+ * ? Load only users with ROLE_REP (student representatives).
+ *
+ * Filters the full user list and returns a compact array containing
+ * only representatives.
+ *
+ * @param[out] outReps  Destination pointer for the allocated array.
+ * @return               Number of representatives loaded.
+ *
+ * @note `*outReps` must be freed by the caller.
+ */
 int load_reps(User **outReps) {
     User *all = NULL;
     int n = load_users(&all);
@@ -50,7 +80,16 @@ int load_reps(User **outReps) {
     return cnt;
 }
 
-// Save users
+/**
+ * ? Save an array of users to disk.
+ *
+ * Opens `Users_Path` for writing, then writes each user's
+ * username, password, and role.
+ *
+ * @param arr    Array of users to save.
+ * @param count  Number of entries.
+ * @return       0 on success; -1 on file open failure.
+ */
 int save_users(const User *arr, int count) {
     FILE *f = fopen(Users_Path, "w");
     if (!f) return -1;
@@ -59,7 +98,17 @@ int save_users(const User *arr, int count) {
     fclose(f); return 0;
 }
 
-// Load manifestos
+/**
+ * ? Load all candidate manifestos.
+ *
+ * Reads each line formatted as "username|manifesto" from `Manifesto_Path`,
+ * splitting on '|', stripping trailing newline from manifesto.
+ *
+ * @param[out] out  Destination pointer for allocated Manifesto array.
+ * @return           Number of manifestos loaded.
+ *
+ * @note Caller must free `*out`.
+ */
 int load_manifestos(Manifesto **out) {
     FILE *f = fopen(Manifesto_Path, "r");
     if (!f) { *out = NULL; return 0; }
@@ -78,7 +127,15 @@ int load_manifestos(Manifesto **out) {
     fclose(f); *out = arr; return cnt;
 }
 
-// Save manifestos
+/**
+ * ? Save an array of manifestos to disk.
+ *
+ *  Writes each record as "rep_username|manifesto\n" to `Manifesto_Path`.
+ *
+ * @param arr    Manifesto array.
+ * @param count  Number of entries.
+ * @return       0 on success; -1 on failure to open file.
+ */
 int save_manifestos(const Manifesto *arr, int count) {
     FILE *f = fopen(Manifesto_Path, "w");
     if (!f) return -1;
@@ -86,8 +143,16 @@ int save_manifestos(const Manifesto *arr, int count) {
         fprintf(f, "%s|%s\n", arr[i].rep_username, arr[i].manifesto);
     fclose(f); return 0;
 }
-
-// Load votes
+/**
+ * ? Load all votes from disk.
+ *
+ * Reads lines "student_username rep_username" into a dynamically allocated Vote array.
+ *
+ * @param[out] out  Destination pointer for allocated Vote array.
+ * @return           Number of votes loaded.
+ *
+ * @note Caller must free `*out`.
+ */
 int load_votes(Vote **out) {
     FILE *f = fopen(Votes_Path, "r");
     if (!f) { *out = NULL; return 0; }
@@ -102,7 +167,15 @@ int load_votes(Vote **out) {
     fclose(f); *out = arr; return cnt;
 }
 
-// Save votes
+/**
+ * ? Save a list of votes to disk.
+ *
+ * Serializes each Vote as "student_username rep_username\n" into `Votes_Path`.
+ *
+ * @param arr    Array of votes.
+ * @param count  Number of votes.
+ * @return       0 on success; -1 if file open fails.
+ */
 int save_votes(const Vote *arr, int count) {
     FILE *f = fopen(Votes_Path, "w");
     if (!f) return -1;
@@ -111,7 +184,16 @@ int save_votes(const Vote *arr, int count) {
     fclose(f); return 0;
 }
 
-// Save results
+/**
+ * ? Save final vote tally results to disk.
+ *
+ * Writes each manifesto's rep_username and vote count separated by space.
+ *
+ * @param mfs      Array of Manifesto entries.
+ * @param counts   Corresponding vote counts.
+ * @param mfCount  Number of entries.
+ * @return         0 on success; -1 on file open failure.
+ */
 int save_results(const Manifesto *mfs, const int *counts, int mfCount) {
     FILE *f = fopen(Results_Path, "w");
     if (!f) return -1;
@@ -120,7 +202,18 @@ int save_results(const Manifesto *mfs, const int *counts, int mfCount) {
     fclose(f); return 0;
 }
 
-// Load results
+/**
+ * ? Load published results from disk.
+ *
+ * Reads each line formatted "rep_username count" from `Results_Path`,
+ * generating separate arrays for manifestos and vote counts.
+ *
+ * @param[out] outMfs     Manifesto array (rep_username only).
+ * @param[out] outCounts  Parallel array of vote counts.
+ * @return                Number of records loaded (0 if none or file missing).
+ *
+ * @pre Caller must free both `*outMfs` and `*outCounts`.
+ */
 int load_results(Manifesto **outMfs, int **outCounts) {
     FILE *f = fopen(Results_Path, "r");
     //! correction
@@ -146,7 +239,17 @@ int load_results(Manifesto **outMfs, int **outCounts) {
     fclose(f); *outMfs = mfs; *outCounts = cnts; return n;
 }
 
-// Ensure every rep has an manifesto entry
+/**
+ * ? Ensure every rep has a manifesto entry.
+ *
+ * - Loads current reps and manifestos.
+ * - Syncs entries: carries over existing manifestos, and for absent reps,
+ *   adds placeholder "Not yet submitted".
+ * - Saves the updated list to disk.
+ *
+ * *Usage:
+ *   - Keeps manifesto records consistent after reps register/unregister.
+ */
 void sync_manifestos_with_reps(void) {
     User *reps = NULL;
     int repCount = load_reps(&reps);
@@ -181,11 +284,17 @@ void sync_manifestos_with_reps(void) {
     free(updated);
 }
 
-//! Display the status of results
-// This function checks if the results file has been updated since the last vote
-// and displays the status accordingly.
-// It reads the first line of the results file and checks if it starts with "updated"
-// to determine if the results have been published or if new votes have been recorded.
+/**
+ * ? Display current result publication status.
+ *
+ * Reads the first line of `Vote_Updates_Path`:
+ * - If it starts with "updated", prints that results have been published.
+ * - Otherwise, indicates new votes exist and warns waiting for publishing.
+ * - If file is missing or empty, displays status accordingly.
+ * * Usage:
+ *   - Called by admin to check if results are ready.
+ *   - Helps avoid confusion about whether results are finalized.
+ */
 void display_result_status(void) {
     FILE *f = fopen(Vote_Updates_Path, "r");
     if (!f) {
@@ -204,10 +313,17 @@ void display_result_status(void) {
     fclose(f);
 }
 
-//! Mark results as published
-// This function updates the results file to indicate that the results have been published.
-// It writes "updated" to the file, which can be checked later to determine if the results have been published.
-// This is useful for the admin to mark the results after they have been finalized
+/**
+ * ? Mark that results have been published.
+ *
+ * Overwrites `Vote_Updates_Path` with single line "updated",
+ * signaling to other code that results are current.
+ *
+ * * Usage:
+ *   - Called after admin publishes results.
+ *   - Prevents confusion by indicating no new votes are pending.
+ *   - Ensures future vote updates are appended correctly.
+ */
 void mark_results_published(void) {
     FILE *f = fopen(Vote_Updates_Path, "w");
     if (!f) {
@@ -219,9 +335,18 @@ void mark_results_published(void) {
     printf("[ADMIN] Results marked as published. New votes will be cleared.\n");
 }
 
-//! Append vote update
-// This function appends a vote update to the "votes_updates.txt" file.
-// It writes the username of the user who cast the vote, allowing tracking of who voted.    
+/**
+ * ? Record a vote update to track new votes.
+ *
+ * Appends a line "vote_cast_by:<username>" to `Vote_Updates_Path`.
+ * If file begins with "updated", it is reset before appending.
+ *
+ * @param current  User who cast the vote (must not be NULL).
+ *
+ * *Usage:
+ *   - Called after successful vote by a student.
+ *   - Maintains new‑vote flag for admins to re‑publish results.
+ */ 
 void append_vote_update(const User *current) {
     FILE *f = fopen(Vote_Updates_Path, "a+");
     if (!f) {
